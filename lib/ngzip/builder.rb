@@ -1,4 +1,5 @@
 require 'zlib'
+require 'uri'
 
 module Ngzip
   
@@ -23,10 +24,10 @@ module Ngzip
       list = file_list(files)
       prefix = detect_common_prefix(list)
       list.map do |f|
-        sprintf("%s %d %s %s",
+        sprintf('%s %d %s %s',
                 compute_crc32(f, settings),
                 File.size(f).to_i,
-                f,
+                URI.escape(f),
                 f.gsub(prefix, '')
         )
       end.join("\n")
