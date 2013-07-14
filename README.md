@@ -1,6 +1,7 @@
 # Ngzip
 
-TODO: Write a gem description
+This gem allows easy integration of nginx mod_zip into your ruby/rails application by providing
+the formatted output list and a HTTP header to use the on-thy-fly creation of ZIP archives.
 
 ## Installation
 
@@ -18,12 +19,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In a controller
 
-## Contributing
+    b = Nginx::Builder.new()
+    response.headers['X-Archive-Files'] = 'zip'
+    render :text => b.build("/data/test/Report.pdf", "/data/test/LargeArchive.tar")
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+
+## License
+
+Copyright (c) 2013, ncode gmbh. All Rights Reserved.
+
+This project is licenced under the [MIT License](LICENSE.txt).
+

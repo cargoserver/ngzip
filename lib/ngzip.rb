@@ -1,5 +1,8 @@
 require "ngzip/version"
+require "ngzip/builder"
 
 module Ngzip
-  # Your code goes here...
+  def self.build
+    
+  end
 end

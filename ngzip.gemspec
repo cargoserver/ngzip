@@ -8,8 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Ngzip::VERSION
   spec.authors       = ["dup2"]
   spec.email         = ["zarkov@ncode.ch"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Provides a nginx mod_zip compatible file manifest for streaming support.
+                          See http://wiki.nginx.org/NginxNgxZip for the nginx module.}
+  spec.summary       = %q{Provides a nginx mod_zip compatible file manifest for streaming support}
   spec.homepage      = ""
   spec.license       = "MIT"
 
