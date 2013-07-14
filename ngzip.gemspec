@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Provides a nginx mod_zip compatible file manifest for streaming support.
                           See http://wiki.nginx.org/NginxNgxZip for the nginx module.}
   spec.summary       = %q{Provides a nginx mod_zip compatible file manifest for streaming support}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/cargoserver/ngzip"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
