@@ -5,7 +5,7 @@ module Ngzip
   class Builder
     
     BUFFER_SIZE = 8 * 1024
-
+    
     # Public: Build the files manifest for mod_zip, see http://wiki.nginx.org/NginxNgxZip for the specs.
     # 
     # files - An Array of absolute file path elements
@@ -29,8 +29,7 @@ module Ngzip
                 f,
                 f.gsub(prefix, '')
         )
-      end.join("\n")      
-      
+      end.join("\n")
     end
 
     # Public: Get the special header to signal the mod_zip
@@ -70,7 +69,6 @@ module Ngzip
           e
         end
       end.flatten
-      
     end
     
     
@@ -98,8 +96,6 @@ module Ngzip
       end
       crc32.to_s(16)
     end
-    
-    
     
   end
   
