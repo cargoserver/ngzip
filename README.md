@@ -21,10 +21,27 @@ Or install it yourself as:
 
 In a controller
 
-    b = Nginx::Builder.new()
-    response.headers['X-Archive-Files'] = 'zip'
-    render :text => b.build("/data/test/Report.pdf", "/data/test/LargeArchive.tar")
+```ruby
+b = Nginx::Builder.new()
+response.headers['X-Archive-Files'] = 'zip'
+render :text => b.build("/data/test/Report.pdf", "/data/test/LargeArchive.tar")
+```
 
+### nginx configuration
+
+Compile nginx with the mod_zip module from https://github.com/evanmiller/mod_zip.
+
+Configure nginx to serve files with absolute paths from an internal location
+
+    # mod_zip location helper
+  	# Note: The leading ^~ is essential here, no more checks should be done after this match
+  	location ^~ /data/ {
+    	root /;
+    	internal;
+  	}
+
+Note that we only operate with local files in this examples. The module mod_zip uses subrequests to 
+fetch the actual file data and would support any location type (even proxied).
 
 ## License
 
