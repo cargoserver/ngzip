@@ -87,7 +87,29 @@ describe Ngzip::Builder do
       expected = "#{invalid_but_cached} 446 #{lorem} lorem.txt"
       builder.build(lorem, options.merge(:crc_cache => {lorem => invalid_but_cached})).must_equal expected
     end
+    
+    it 'must remove common directories by default' do
+      pathes = builder.build([lorem, ipsum]).split("\n").map{|line| line.split.last}
+      expected = ["lorem.txt", "ipsum.txt"]
+      pathes.must_equal expected
+    end
+    
+    it 'must keep common directories if :base_dir is provided' do
+      options = {:base_dir => Pathname.new(lorem).parent.parent.to_s}
+      pathes = builder.build([lorem, ipsum], options).split("\n").map{|line| line.split.last}
+      expected = ["a/lorem.txt", "a/ipsum.txt"]
+      pathes.must_equal expected
+    end
+    
+    it 'must cope with a trailing / in the :base_dir' do
+      options = {:base_dir => Pathname.new(lorem).parent.parent.to_s + '/'}
+      pathes = builder.build([lorem, ipsum], options).split("\n").map{|line| line.split.last}
+      expected = ["a/lorem.txt", "a/ipsum.txt"]
+      pathes.must_equal expected
       
+    end
+    
+    
   end
   
 end

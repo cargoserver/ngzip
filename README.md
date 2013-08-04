@@ -27,6 +27,27 @@ response.headers['X-Archive-Files'] = 'zip'
 render :text => b.build(["/data/test/Report.pdf", "/data/test/LargeArchive.tar"])
 ```
 
+This will generate a manifest similar to this
+
+    8f92322f 446 /data/test/Report.pdf Report.pdf
+    13788d9a 234 /data/test/LargeArchive.tar LargeArchive.tar
+
+### Directories in the archive
+
+The builder will automatically remove common directory prefix for the pathes inside the archive. If you want to keep relative directories inside, specify the :base_dir option when calling the builder:
+
+```ruby
+options = {:base_dir => '/data'}
+render :text => b.build(["/data/test/Report.pdf", "/data/test/LargeArchive.tar"], options)
+```
+
+This will generate
+     
+    8f92322f 446 /data/test/Report.pdf test/Report.pdf
+    13788d9a 234 /data/test/LargeArchive.tar test/LargeArchive.tar
+
+
+
 ### nginx configuration
 
 Compile nginx with the mod_zip module from https://github.com/evanmiller/mod_zip.

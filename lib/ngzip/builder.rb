@@ -17,12 +17,14 @@ module Ngzip
     # The following options are available:
     #  :crc         => Enable or disable CRC-32 checksums
     #  :crc_cache   => Allows for provided cached CRC-32 checksums in a hash where the key is the file path
+    #  :base_dir    => Use this as root for the relative pathes in the archive, keep all directories below
     def build(files, options = {})
       settings = {:crc => true}
       settings.merge! options
             
       list = file_list(files)
-      prefix = detect_common_prefix(list)
+      prefix = options[:base_dir] || detect_common_prefix(list)
+      prefix += '/' unless prefix.end_with?('/')
       list.map do |f|
         sprintf('%s %d %s %s',
                 compute_crc32(f, settings),
@@ -49,7 +51,7 @@ module Ngzip
     # Returns a common prefix
     def detect_common_prefix(list)
       if list.size == 1
-        return File.dirname(list.first) + '/'
+        return File.dirname(list.first)
       end
       prefix = ''
       min, max = list.sort.values_at(0, -1)
