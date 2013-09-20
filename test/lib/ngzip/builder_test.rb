@@ -15,6 +15,7 @@ describe Ngzip::Builder do
   let(:lorem) {File.expand_path('../../../data/a/lorem.txt', __FILE__)}
   let(:ipsum) {File.expand_path('../../../data/a/ipsum.txt', __FILE__)}
   let(:whitespaced) {File.expand_path('../../../data/a/A filename with whitespace.txt', __FILE__)}
+  let(:plused) {File.expand_path('../../../data/c/A filename with space and + in it.txt', __FILE__)}
   let(:cargo) {File.expand_path('../../../data/b/Cargo.png', __FILE__)}
   let(:sit) {File.expand_path('../../../data/sit.txt', __FILE__)}
   let(:a) {File.expand_path('../../../data/a', __FILE__)}
@@ -105,8 +106,14 @@ describe Ngzip::Builder do
       options = {:base_dir => Pathname.new(lorem).parent.parent.to_s + '/'}
       pathes = builder.build([lorem, ipsum], options).split("\n").map{|line| line.split.last}
       expected = ["a/lorem.txt", "a/ipsum.txt"]
-      pathes.must_equal expected
-      
+      pathes.must_equal expected      
+    end
+    
+    it 'must correctly encode filenames with a "+"' do
+      options = {}
+      name = File.join(Pathname.new(plused).parent.to_s, 'A%20filename%20with%20space%20and%20%2B%20in%20it.txt') 
+      expected = "8f92322f 446 #{name} A filename with space and + in it.txt"
+      builder.build([plused], options).must_equal expected
     end
     
     

@@ -1,3 +1,7 @@
+### 1.0.4 (2013-09-20)
+
+* Fixed issue #1 ("+" character in filename)
+
 ### 1.0.3 (2013-08-05)
 
 * Added the :base_dir option

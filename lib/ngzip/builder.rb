@@ -29,7 +29,7 @@ module Ngzip
         sprintf('%s %d %s %s',
                 compute_crc32(f, settings),
                 File.size(f).to_i,
-                URI.escape(f),
+                Builder.encode(f),
                 f.gsub(prefix, '')
         )
       end.join("\n")
@@ -40,6 +40,14 @@ module Ngzip
     # Returns the header as a string "key: value"
     def header()
       "X-Archive-Files: zip"
+    end
+    
+    
+    # Public: Encode the string 
+    #
+    # Returns the encoded string using URL escape formatting
+    def self.encode(string)
+      URI.encode(string).sub('+', "%2B")
     end
     
     private
