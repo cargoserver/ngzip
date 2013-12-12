@@ -1,3 +1,8 @@
+### 1.0.6 (2013-12-12)
+
+* Fixed a regression from 1.0.5 where directories were included due to the changed pattern
+
+
 ### 1.0.5 (2013-12-12)
 
 * Fixed issue #2 (files without extensions being ignored)
