@@ -1,3 +1,7 @@
+### 1.0.5 (2013-12-12)
+
+* Fixed issue #2 (files without extensions being ignored)
+
 ### 1.0.4 (2013-09-20)
 
 * Fixed issue #1 ("+" character in filename)
