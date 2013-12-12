@@ -15,6 +15,7 @@ describe Ngzip::Builder do
   let(:lorem) {File.expand_path('../../../data/a/lorem.txt', __FILE__)}
   let(:ipsum) {File.expand_path('../../../data/a/ipsum.txt', __FILE__)}
   let(:without_dot) {File.expand_path('../../../data/a/filename-without-a-dot', __FILE__)}
+  let(:my_file) {File.expand_path('../../../data/a/d/my_file.txt', __FILE__)}
   let(:whitespaced) {File.expand_path('../../../data/a/A filename with whitespace.txt', __FILE__)}
   let(:plused) {File.expand_path('../../../data/c/A filename with space and + in it.txt', __FILE__)}
   let(:cargo) {File.expand_path('../../../data/b/Cargo.png', __FILE__)}
@@ -62,6 +63,7 @@ describe Ngzip::Builder do
     
     it 'must return a correct list for all files in a directory' do
       expected = "8f92322f 446 #{URI.escape(whitespaced)} A filename with whitespace.txt"
+      expected << "\n8f92322f 446 #{my_file} d/my_file.txt"
       expected << "\n8f92322f 446 #{without_dot} filename-without-a-dot"
       expected << "\n8f92322f 446 #{ipsum} ipsum.txt"
       expected << "\n8f92322f 446 #{lorem} lorem.txt"
@@ -70,6 +72,7 @@ describe Ngzip::Builder do
     
     it 'must allow to mix files and directories' do
       expected = "8f92322f 446 #{URI.escape(whitespaced)} a/A filename with whitespace.txt"
+      expected << "\n8f92322f 446 #{my_file} a/d/my_file.txt"
       expected << "\n8f92322f 446 #{without_dot} a/filename-without-a-dot"
       expected << "\n8f92322f 446 #{ipsum} a/ipsum.txt"
       expected << "\n8f92322f 446 #{lorem} a/lorem.txt"

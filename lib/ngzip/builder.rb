@@ -75,7 +75,7 @@ module Ngzip
     def file_list(files)
       Array(files).map do |e|
         if File.directory?(e)
-          Dir.glob("#{e}/**/*")
+          Dir.glob("#{e}/**/*").reject { |f| File.directory?(f) }
         else
           e
         end
