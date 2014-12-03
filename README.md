@@ -22,7 +22,7 @@ Or install it yourself as:
 In a controller
 
 ```ruby
-b = Nginx::Builder.new()
+b = Ngzip::Builder.new()
 response.headers['X-Archive-Files'] = 'zip'
 render :text => b.build(["/data/test/Report.pdf", "/data/test/LargeArchive.tar"])
 ```
