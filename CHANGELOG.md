@@ -1,7 +1,10 @@
+### 1.0.7 (2017-10-20)
+
+* Fixed an issue with '?' encoding
+
 ### 1.0.6 (2013-12-12)
 
 * Fixed a regression from 1.0.5 where directories were included due to the changed pattern
-
 
 ### 1.0.5 (2013-12-12)
 
@@ -26,4 +29,3 @@
 ### 1.0.0 (2013-07-14)
 
 * Initial public release
-
