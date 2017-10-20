@@ -47,7 +47,7 @@ module Ngzip
     #
     # Returns the encoded string using URL escape formatting
     def self.encode(string)
-      URI.encode(string).sub('+', "%2B")
+      URI.encode(string).gsub('+', '%2B').gsub('?', '%3F')
     end
     
     private
