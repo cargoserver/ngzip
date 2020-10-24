@@ -59,7 +59,8 @@ module Ngzip
         return File.dirname(list.first)
       end
       prefix = ''
-      min, max = list.sort.values_at(0, -1)
+      excluding_file_names = list.map { |p| File.dirname p }
+      min, max = excluding_file_names.sort.values_at(0, -1)
       min.split(//).each_with_index do |c, i|
         break if c != max[i, 1]
         prefix << c
