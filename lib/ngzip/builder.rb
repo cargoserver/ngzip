@@ -26,10 +26,10 @@ module Ngzip
       prefix += '/' unless prefix.end_with?('/')
       list.map do |f|
         sprintf('%s %d %s %s',
-                compute_crc32(f, settings),
-                File.size(f).to_i,
-                Builder.encode(f),
-                f.gsub(prefix, '')
+          compute_crc32(f, settings),
+          File.size(f).to_i,
+          Builder.encode(f),
+          f.gsub(prefix, ''),
         )
       end.join("\n")
     end
@@ -37,7 +37,7 @@ module Ngzip
     # Public: Get the special header to signal the mod_zip
     #
     # Returns the header as a string "key: value"
-    def header()
+    def header
       "X-Archive-Files: zip"
     end
 
@@ -98,7 +98,7 @@ module Ngzip
 
       # read using a buffer, we might operate on large files!
       crc32 = 0
-      File.open(file,'rb') do |f|
+      File.open(file, 'rb') do |f|
         while buffer = f.read(BUFFER_SIZE) do
           crc32 = Zlib.crc32(buffer, crc32)
         end
