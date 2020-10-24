@@ -1,5 +1,6 @@
 require 'zlib'
 require 'uri'
+require 'erb'
 
 module Ngzip
   class Builder
@@ -44,7 +45,7 @@ module Ngzip
     #
     # Returns the encoded string using URL escape formatting
     def self.encode(string)
-      URI.encode(string).gsub('+', '%2B').gsub('?', '%3F')
+      ERB::Util.url_encode(string)
     end
 
     private
