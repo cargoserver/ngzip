@@ -74,7 +74,9 @@ module Ngzip
     def file_list(files)
       Array(files).map do |e|
         if File.directory?(e)
-          Dir.glob("#{e}/**/*").reject { |f| File.directory?(f) }
+          # `expand_path` removes any trailing slash from the path string
+          sanitized_path = File.expand_path(e)
+          Dir.glob("#{sanitized_path}/**/*").reject { |f| File.directory?(f) }
         else
           e
         end

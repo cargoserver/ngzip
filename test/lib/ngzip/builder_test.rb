@@ -107,6 +107,22 @@ describe Ngzip::Builder do
       pathes.must_equal expected
     end
 
+    describe "when building the manifest from a directory path parameter" do
+      it "removes trailing slash from builder file path" do
+        dir_path = File.join(File.dirname(lorem), '/')
+        result = builder.build(dir_path)
+        encoded_host_path = ERB::Util.url_encode(File.join(File.expand_path('../../data', File.dirname(__FILE__)), '/'))
+        manifest = <<-MANIFEST.chomp
+8f92322f 446 #{encoded_host_path}a%2FA%20filename%20with%20whitespace.txt A filename with whitespace.txt
+8f92322f 446 #{encoded_host_path}a%2Ffilename-without-a-dot filename-without-a-dot
+8f92322f 446 #{encoded_host_path}a%2Fipsum.txt ipsum.txt
+8f92322f 446 #{encoded_host_path}a%2Florem.txt lorem.txt
+8f92322f 446 #{encoded_host_path}a%2Fd%2Fmy_file.txt d/my_file.txt
+MANIFEST
+        expect(result).must_equal manifest
+      end
+    end
+
     it 'must keep common directories if :base_dir is provided' do
       options = {:base_dir => Pathname.new(lorem).parent.parent.to_s}
       pathes = builder.build([lorem, ipsum], options).split("\n").map { |line| line.split.last }
