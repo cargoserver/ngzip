@@ -1,5 +1,6 @@
 require 'zlib'
 require 'uri'
+require 'erb'
 
 module Ngzip
   class Builder
@@ -25,10 +26,10 @@ module Ngzip
       prefix += '/' unless prefix.end_with?('/')
       list.map do |f|
         sprintf('%s %d %s %s',
-                compute_crc32(f, settings),
-                File.size(f).to_i,
-                Builder.encode(f),
-                f.gsub(prefix, '')
+          compute_crc32(f, settings),
+          File.size(f).to_i,
+          Builder.encode(f),
+          f.gsub(prefix, ''),
         )
       end.join("\n")
     end
@@ -36,7 +37,7 @@ module Ngzip
     # Public: Get the special header to signal the mod_zip
     #
     # Returns the header as a string "key: value"
-    def header()
+    def header
       "X-Archive-Files: zip"
     end
 
@@ -44,7 +45,7 @@ module Ngzip
     #
     # Returns the encoded string using URL escape formatting
     def self.encode(string)
-      URI.encode(string).gsub('+', '%2B').gsub('?', '%3F')
+      ERB::Util.url_encode(string)
     end
 
     private
@@ -59,7 +60,8 @@ module Ngzip
         return File.dirname(list.first)
       end
       prefix = ''
-      min, max = list.sort.values_at(0, -1)
+      excluding_file_names = list.map { |p| File.dirname p }
+      min, max = excluding_file_names.sort.values_at(0, -1)
       min.split(//).each_with_index do |c, i|
         break if c != max[i, 1]
         prefix << c
@@ -72,7 +74,9 @@ module Ngzip
     def file_list(files)
       Array(files).map do |e|
         if File.directory?(e)
-          Dir.glob("#{e}/**/*").reject { |f| File.directory?(f) }
+          # `expand_path` removes any trailing slash from the path string
+          sanitized_path = File.expand_path(e)
+          Dir.glob("#{sanitized_path}/**/*").reject { |f| File.directory?(f) }
         else
           e
         end
@@ -96,7 +100,7 @@ module Ngzip
 
       # read using a buffer, we might operate on large files!
       crc32 = 0
-      File.open(file,'rb') do |f|
+      File.open(file, 'rb') do |f|
         while buffer = f.read(BUFFER_SIZE) do
           crc32 = Zlib.crc32(buffer, crc32)
         end
