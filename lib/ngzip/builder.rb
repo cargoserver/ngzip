@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'zlib'
 require 'uri'
 require 'erb'
 
 module Ngzip
+  # The manifest builder based on the file list
   class Builder
     BUFFER_SIZE = 8 * 1024
 
@@ -14,22 +17,25 @@ module Ngzip
     # Returns a line for each file separated by \n
     #
     # The following options are available:
-    #  :crc         => Enable or disable CRC-32 checksums
-    #  :crc_cache   => Allows for provided cached CRC-32 checksums in a hash where the key is the file path
-    #  :base_dir    => Use this as root for the relative pathes in the archive, keep all directories below
+    #  crc:         Enable or disable CRC-32 checksums
+    #  crc_cache:   Allows for provided cached CRC-32 checksums in a hash where the key is the file path
+    #  base_dir:    Use this as root for the relative pathes in the archive, keep all directories below
     def build(files, options = {})
-      settings = {:crc => true}
+      settings = { crc: true }
       settings.merge! options
 
       list = file_list(files)
       prefix = options[:base_dir] || detect_common_prefix(list)
       prefix += '/' unless prefix.end_with?('/')
       list.map do |f|
-        sprintf('%s %d %s %s',
-          compute_crc32(f, settings),
-          File.size(f).to_i,
-          Builder.encode(f),
-          f.gsub(prefix, ''),
+        format(
+          '%<crc>s %<size>d %<url>s %<name>s',
+          {
+            crc: compute_crc32(f, settings),
+            size: File.size(f).to_i,
+            url: Builder.encode(f),
+            name: f.gsub(prefix, '')
+          }
         )
       end.join("\n")
     end
@@ -38,7 +44,7 @@ module Ngzip
     #
     # Returns the header as a string "key: value"
     def header
-      "X-Archive-Files: zip"
+      'X-Archive-Files: zip'
     end
 
     # Public: Encode the string
@@ -56,17 +62,17 @@ module Ngzip
     #
     # Returns a common prefix
     def detect_common_prefix(list)
-      if list.size == 1
-        return File.dirname(list.first)
-      end
-      prefix = ''
+      return File.dirname(list.first) if list.size == 1
+
+      prefix = StringIO.new
       excluding_file_names = list.map { |p| File.dirname p }
       min, max = excluding_file_names.sort.values_at(0, -1)
       min.split(//).each_with_index do |c, i|
         break if c != max[i, 1]
+
         prefix << c
       end
-      prefix
+      prefix.string
     end
 
     # Internal: Compute the file list by expanding directories
@@ -84,7 +90,7 @@ module Ngzip
     end
 
     # Internal: Compute the CRC-32 checksum for a file unless the settings
-    # disable the computation (:crc => false) and this method returns "-"
+    # disable the computation (crc: false) and this method returns "-"
     #
     # file - The full path to the file
     # settings - The settings hash
@@ -94,14 +100,12 @@ module Ngzip
       return '-' unless settings[:crc]
 
       # honor the cache
-      if settings[:crc_cache] && settings[:crc_cache][file]
-        return settings[:crc_cache][file]
-      end
+      return settings[:crc_cache][file] if settings[:crc_cache] && settings[:crc_cache][file]
 
       # read using a buffer, we might operate on large files!
       crc32 = 0
       File.open(file, 'rb') do |f|
-        while buffer = f.read(BUFFER_SIZE) do
+        while (buffer = f.read(BUFFER_SIZE))
           crc32 = Zlib.crc32(buffer, crc32)
         end
       end
