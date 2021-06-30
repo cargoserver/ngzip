@@ -74,9 +74,9 @@ describe Ngzip::Builder do
       expected << "\n8f92322f 446 #{encode_file_path(lorem)} lorem.txt"
       expected << "\n8f92322f 446 #{encode_file_path(my_file)} d/my_file.txt"
       puts
-      puts expected.string
+      puts expected.string.lines.sort
       puts
-      puts builder.build(a, options)
+      puts builder.build(a, options).lines.sort
       puts
       expect(builder.build(a, options).lines.sort).must_equal expected.string.lines.sort
     end
