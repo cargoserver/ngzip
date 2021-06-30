@@ -68,5 +68,6 @@ fetch the actual file data and would support any location type (even proxied).
 
 Copyright (c) 2013, ncode gmbh. All Rights Reserved.
 Copyright (c) 2017, CargoServer AG. All Rights Reserved.
+Copyright (c) 2021, Swiss Cyber Gate AG. All Rights Reserved.
 
 This project is licenced under the [MIT License](LICENSE.txt).
