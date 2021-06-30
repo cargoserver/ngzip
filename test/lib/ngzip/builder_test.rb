@@ -67,29 +67,26 @@ describe Ngzip::Builder do
     end
 
     it 'must return a correct list for all files in a directory' do
-      expected = StringIO.new
-      expected << "8f92322f 446 #{encode_file_path(whitespaced)} A filename with whitespace.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(without_dot)} filename-without-a-dot"
-      expected << "\n8f92322f 446 #{encode_file_path(ipsum)} ipsum.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(lorem)} lorem.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(my_file)} d/my_file.txt"
-      puts
-      puts expected.string.lines.sort.map(&:chomp)
-      puts
-      puts builder.build(a, options).lines.sort.map(&:chomp)
-      puts
-      expect(builder.build(a, options).lines.sort.map(&:chomp)).must_equal expected.string.lines.sort.map(&:chomp)
+      expected = <<~MANIFEST.chomp
+        8f92322f 446 #{encode_file_path(whitespaced)} A filename with whitespace.txt
+        8f92322f 446 #{encode_file_path(without_dot)} filename-without-a-dot
+        8f92322f 446 #{encode_file_path(ipsum)} ipsum.txt
+        8f92322f 446 #{encode_file_path(lorem)} lorem.txt
+        8f92322f 446 #{encode_file_path(my_file)} d/my_file.txt
+      MANIFEST
+      expect(builder.build(a, options).lines.sort).must_equal expected.lines.sort
     end
 
     it 'must allow to mix files and directories' do
-      expected = StringIO.new
-      expected << "8f92322f 446 #{encode_file_path(whitespaced)} a/A filename with whitespace.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(without_dot)} a/filename-without-a-dot"
-      expected << "\n8f92322f 446 #{encode_file_path(ipsum)} a/ipsum.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(lorem)} a/lorem.txt"
-      expected << "\n8f92322f 446 #{encode_file_path(my_file)} a/d/my_file.txt"
-      expected << "\nf7c0867d 1342 #{encode_file_path(sit)} sit.txt"
-      expect(builder.build([a, sit], options).lines.sort).must_equal expected.string.lines.sort
+      expected = <<~MANIFEST.chomp
+        8f92322f 446 #{encode_file_path(whitespaced)} a/A filename with whitespace.txt
+        8f92322f 446 #{encode_file_path(without_dot)} a/filename-without-a-dot
+        8f92322f 446 #{encode_file_path(ipsum)} a/ipsum.txt
+        8f92322f 446 #{encode_file_path(lorem)} a/lorem.txt
+        8f92322f 446 #{encode_file_path(my_file)} a/d/my_file.txt
+        f7c0867d 1342 #{encode_file_path(sit)} sit.txt
+      MANIFEST
+      expect(builder.build([a, sit], options).lines.sort).must_equal expected.lines.sort
     end
 
     it 'must preserve directory names' do
