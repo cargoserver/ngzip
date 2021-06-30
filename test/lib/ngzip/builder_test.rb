@@ -16,16 +16,17 @@ describe Ngzip::Builder do
   end
 
   let(:builder) { Ngzip::Builder.new }
+  let(:sit) { File.expand_path('../../data/sit.txt', __dir__) }
   let(:lorem) { File.expand_path('../../data/a/lorem.txt', __dir__) }
   let(:ipsum) { File.expand_path('../../data/a/ipsum.txt', __dir__) }
-  let(:without_dot) { File.expand_path('../../data/a/filename-without-a-dot', __dir__) }
   let(:my_file) { File.expand_path('../../data/a/d/my_file.txt', __dir__) }
+  let(:without_dot) { File.expand_path('../../data/a/filename-without-a-dot', __dir__) }
   let(:whitespaced) { File.expand_path('../../data/a/A filename with whitespace.txt', __dir__) }
-  let(:plused) { File.expand_path('../../data/c/A filename with space and + in it.txt', __dir__) }
-  let(:cargo) { File.expand_path('../../data/b/Cargo.png', __dir__) }
-  let(:sit) { File.expand_path('../../data/sit.txt', __dir__) }
   let(:a) { File.expand_path('../../data/a', __dir__) }
+  let(:cargo) { File.expand_path('../../data/b/Cargo.png', __dir__) }
+  let(:plused) { File.expand_path('../../data/c/A filename with space and + in it.txt', __dir__) }
   let(:questions) { File.expand_path('../../data/c/questions?', __dir__) }
+  let(:brackets) { File.expand_path('../../data/c/[brackets]', __dir__) }
 
   it 'must be defined' do
     expect(Ngzip::Builder).wont_be_nil
@@ -109,6 +110,17 @@ describe Ngzip::Builder do
     end
 
     describe 'when building the manifest from a directory path parameter' do
+      describe 'the path includes brackets' do
+        it 'handles special characters in file names' do
+          result = builder.build(brackets)
+          encoded_host_path = ERB::Util.url_encode(File.join(File.expand_path('../data', File.dirname(__dir__)), '/'))
+          manifest = <<~MANIFEST.chomp
+            dee5e05b 894 #{encoded_host_path}c%2F%5Bbrackets%5D%2F%28parenthesis%29.txt (parenthesis).txt
+          MANIFEST
+          expect(result).must_equal manifest
+        end
+      end
+
       it 'removes trailing slash from builder file path' do
         dir_path = File.join(File.dirname(lorem), '/')
         result = builder.build(dir_path)

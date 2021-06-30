@@ -3,6 +3,9 @@
 require 'zlib'
 require 'uri'
 require 'erb'
+require 'core_extensions/string/escape_glob'
+
+String.include CoreExtensions::String::EscapeGlob
 
 module Ngzip
   # The manifest builder based on the file list
@@ -81,7 +84,8 @@ module Ngzip
       Array(files).map do |e|
         if File.directory?(e)
           # `expand_path` removes any trailing slash from the path string
-          sanitized_path = File.expand_path(e)
+          # `String#escape_glob` handles bracket literals otherwise interpreted as glob control characters
+          sanitized_path = File.expand_path(e.escape_glob)
           Dir.glob("#{sanitized_path}/**/*").reject { |f| File.directory?(f) }
         else
           e
