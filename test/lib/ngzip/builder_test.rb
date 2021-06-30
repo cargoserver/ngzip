@@ -73,7 +73,7 @@ describe Ngzip::Builder do
       expected << "\n8f92322f 446 #{encode_file_path(ipsum)} ipsum.txt"
       expected << "\n8f92322f 446 #{encode_file_path(lorem)} lorem.txt"
       expected << "\n8f92322f 446 #{encode_file_path(my_file)} d/my_file.txt"
-      expect(builder.build(a, options)).must_equal expected.string
+      expect(builder.build(a, options).lines.sort).must_equal expected.string.lines.sort
     end
 
     it 'must allow to mix files and directories' do
@@ -84,7 +84,7 @@ describe Ngzip::Builder do
       expected << "\n8f92322f 446 #{encode_file_path(lorem)} a/lorem.txt"
       expected << "\n8f92322f 446 #{encode_file_path(my_file)} a/d/my_file.txt"
       expected << "\nf7c0867d 1342 #{encode_file_path(sit)} sit.txt"
-      expect(builder.build([a, sit], options)).must_equal expected.string
+      expect(builder.build([a, sit], options).lines.sort).must_equal expected.string.lines.sort
     end
 
     it 'must preserve directory names' do
@@ -120,7 +120,7 @@ describe Ngzip::Builder do
           8f92322f 446 #{encoded_host_path}a%2Florem.txt lorem.txt
           8f92322f 446 #{encoded_host_path}a%2Fd%2Fmy_file.txt d/my_file.txt
         MANIFEST
-        expect(result).must_equal manifest
+        expect(result.lines.sort).must_equal manifest.lines.sort
       end
     end
 
