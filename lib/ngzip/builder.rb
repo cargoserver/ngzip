@@ -3,9 +3,9 @@
 require 'zlib'
 require 'uri'
 require 'erb'
-require 'core_extensions/string/escape_glob'
+require 'refinements'
 
-String.include CoreExtensions::String::EscapeGlob
+using Refinements
 
 module Ngzip
   # The manifest builder based on the file list
