@@ -1,3 +1,15 @@
+### 1.2.0 (2021-07-08)
+
+* Fixed an issue with brackets in file names (thanks to @mecampbellsoup)
+* Code cleanup
+* Fixed dependencies
+* Activated github CI actions
+
+### 1.1.0 (2020-11-25)
+
+* Exclude file name from detect common prefix (thanks to @mecampbellsoup)
+* Code cleanup
+
 ### 1.0.7 (2017-10-20)
 
 * Fixed an issue with '?' encoding
